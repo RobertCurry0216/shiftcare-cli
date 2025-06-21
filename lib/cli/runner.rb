@@ -13,17 +13,18 @@ module Shiftcare
         true
       end
 
-      desc "search", "find user in provided json file"
-      method_option :value, required: true, aliases: :v, type: :string
-      method_option :filepath, required: true, aliases: :f, type: :string
-      def search
-        puts DataStores::JsonStore.new(options["filepath"]).search(options["value"])
+      desc "search VALUE", "find user in provided json file"
+      def search(value)
+        type = CONFIG["store_type"]
+        key = CONFIG.dig("schema", "name")
+        puts DataStores.new(type).find_by(key, value)
       end
 
-      desc "validate", "find records with duplicated emails"
-      method_option :filepath, required: true, aliases: :f, type: :string
-      def validate
-        puts DataStores::JsonStore.new(options["filepath"]).validate_emails
+      desc "email_collisions", "find records with duplicated emails"
+      def email_collisions
+        type = CONFIG["store_type"]
+        key = CONFIG.dig("schema", "email")
+        puts DataStores.new(type).find_collisions(key)
       end
     end
   end

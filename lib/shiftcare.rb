@@ -3,10 +3,10 @@
 require_relative "cli/runner"
 require "yaml"
 
-
 module Shiftcare
   VERSION = "0.1.0"
-  CONFIG = YAML.load_file(File.join(__dir__, "..", "config", "cli.yml"))
+  CONFIG_PATH = File.expand_path(File.join(__dir__, "..", "config", "cli.yml"))
+  CONFIG = YAML.load_file(CONFIG_PATH)
 end
 
 def main

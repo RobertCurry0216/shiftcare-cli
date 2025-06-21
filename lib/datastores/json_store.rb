@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require "json"
-require_relative "datastore"
 
 module Shiftcare
   module DataStores
     # Json store
-    class JsonStore < DataStore
+    class JsonStore < BaseStore
       def initialize(filepath = nil)
         super()
         @data = []

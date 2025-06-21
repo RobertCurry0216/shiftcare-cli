@@ -1,5 +1,6 @@
-store_type: "json"
+---
+store_type: json
 filepath: "./data.json"
 schema:
-  name: "full_name"
-  email: "email"
+  name: full_name
+  email: email

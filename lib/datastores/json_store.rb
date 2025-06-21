@@ -13,6 +13,8 @@ module Shiftcare
       end
 
       def load_from_string!(raw)
+        raise InvalidDataError, "JsonStore: Invalid raw data provided" unless raw.is_a? String
+
         @data = JSON.parse(raw)
       rescue JSON::ParserError => e
         raise InvalidDataError, "JsonStore: Invalid json => #{e.message}"
@@ -26,6 +28,12 @@ module Shiftcare
         load_from_string!(File.read(filepath))
       end
 
+      # Searches for all entries where the specified key's value contains the given substring (case-insensitive).
+      #
+      # @param key [String] The object key used to access the value in the stored entries.
+      # @param value [String] The substring to search for within the key's values.
+      #
+      # @return [Array<Hash>] An array of matching entries
       def find_by(key, value)
         raise SearchValueError, "JsonStore: Invalid value provided => #{value}" unless value.is_a? String
         raise SearchValueError, "JsonStore: Invalid key provided => #{key}" unless key.is_a? String
@@ -41,6 +49,14 @@ module Shiftcare
         @data.find_all { |entry| re.match?(entry[key]) }
       end
 
+      # Detects and returns entries that have duplicate normalized values for a given key.
+      #
+      # @param key [String] The field name to check for value collisions.
+      #
+      # @return [Array<Hash>] An array of all entries involved in collisions (groups with >1 entry)
+      #
+      # @note
+      #   - Normalization: Uses {#normalize} to trim whitespace and ignore case during comparison.
       def find_collisions(key)
         raise SearchValueError, "JsonStore: Invalid key provided => #{key}" unless key.is_a? String
 

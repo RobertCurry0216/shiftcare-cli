@@ -12,7 +12,7 @@ module Shiftcare
         raise StoreError "Method Not Implemented: find_collisions"
       end
 
-      # Utility fn to normalize strings for searching
+      # Utility fn to normalize strings when searching
       def normalize(value)
         value&.strip&.downcase || ""
       end

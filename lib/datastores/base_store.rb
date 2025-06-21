@@ -14,7 +14,7 @@ module Shiftcare
 
       # Utility fn to normalize strings for searching
       def normalize(value)
-        value.strip.downcase
+        value&.strip&.downcase || ""
       end
     end
   end

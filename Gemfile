@@ -12,3 +12,5 @@ gem "rubocop", "~> 1.21"
 gem "thor", "~> 1.3"
 
 gem "pry", "~> 0.15.2", group: :development
+
+gem "faker", "~> 3.5"

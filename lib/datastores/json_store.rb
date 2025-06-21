@@ -27,6 +27,9 @@ module Shiftcare
       end
 
       def find_by(key, value)
+        raise SearchValueError, "JsonStore: Invalid value provided => #{value}" unless value.is_a? String
+        raise SearchValueError, "JsonStore: Invalid key provided => #{key}" unless key.is_a? String
+
         normalized_value = normalize(value)
 
         if normalized_value.empty?
@@ -39,6 +42,8 @@ module Shiftcare
       end
 
       def find_collisions(key)
+        raise SearchValueError, "JsonStore: Invalid key provided => #{key}" unless key.is_a? String
+
         hash = {}
         @data.each do |entry|
           normalized = normalize(entry[key])

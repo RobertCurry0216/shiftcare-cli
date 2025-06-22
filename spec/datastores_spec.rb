@@ -5,21 +5,21 @@ require_relative "helpers"
 
 RSpec.describe Shiftcare::DataStores::JsonStore do
   describe "#find_by" do
-    let!(:profile_with_special_characters) {
+    let!(:profile_with_special_characters) do
       mock_profile({ "full_name" => "~?X-Special::Name-X?~" })
-    }
+    end
 
-    let!(:profile_with_jane_a) {
+    let!(:profile_with_jane_a) do
       mock_profile({ "full_name" => "Bob Jane" })
-    }
+    end
 
-    let!(:profile_with_jane_b) {
+    let!(:profile_with_jane_b) do
       mock_profile({ "full_name" => "Mary Mcjaneson" })
-    }
+    end
 
-    let!(:profile_with_missing_data) {
+    let!(:profile_with_missing_data) do
       mock_profile({ "email" => nil })
-    }
+    end
 
     let!(:json_data) do
       [
@@ -118,35 +118,35 @@ RSpec.describe Shiftcare::DataStores::JsonStore do
   end
 
   describe "#find_collisions" do
-    let!(:profiles_with_email_a) {
+    let!(:profiles_with_email_a) do
       # mised casing to test normalization
       [
         mock_profile({ "email" => "a_email@collision.com" }),
         mock_profile({ "email" => "A_EMail@Collision.Com" })
       ]
-    }
+    end
 
-    let!(:profiles_with_email_b) {
+    let!(:profiles_with_email_b) do
       [
         mock_profile({ "email" => "b_email@collision.com" }),
         mock_profile({ "email" => "b_email@collision.com" }),
         mock_profile({ "email" => "b_email@collision.com" })
       ]
-    }
+    end
 
-    let!(:profiles_with_unique_emails) {
+    let!(:profiles_with_unique_emails) do
       [
         mock_profile,
         mock_profile,
         mock_profile
       ]
-    }
+    end
 
-    let!(:profiles_with_missing_data) {
+    let!(:profiles_with_missing_data) do
       [
         mock_profile({ "email" => nil })
       ]
-    }
+    end
 
     context "Should succeed" do
       it "with a no collisions" do

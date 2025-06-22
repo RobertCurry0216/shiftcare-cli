@@ -24,10 +24,6 @@ module Shiftcare
 
         File.write(CONFIG_PATH, YAML.dump(config_copy))
         puts "Datastore filepath successfully updated!"
-      rescue DataStores::StoreError => e
-        raise e if options["verbose"]
-
-        warn "Search failed", e.message
       end
 
       desc "search VALUE", "find records where full_name partially matches given text"

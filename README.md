@@ -1,43 +1,107 @@
-# Shiftcare
+# Shiftcare CLI
 
-TODO: Delete this and the text below, and describe your gem
+## Requirements
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/shiftcare`. To experiment with that code, run `bin/console` for an interactive prompt.
+- Ruby 3.4.4 (It likely works on older versions but has only been tested on this version)
 
-## Installation
+## Setup
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+- clone repository to your local machine
+```
+git clone git@github.com:RobertCurry0216/shiftcare-cli.git
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+- Move into the new directory and run bundle install:
 ```
+cd shiftcare-cli
+bundle install
+```
+
+- Next you need to point the config file at the json file on your local machine. You can either do this by manually updating `filepath` in `/config/cli.yml` or by running the `config` command.
+
+```
+ruby ./lib/shiftcare.rb config -f <path to data.json>
+```
+
 
 ## Usage
 
-TODO: Write usage instructions here
+### Search for name
 
-## Development
+To search for a partial string in the user names, use the `search` command.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+This accepts one argument, a string, which will be compared against all users in the data store and return all that partially match the provided string.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+This search will ignore case and any leading / trailing whitespace.
 
-## Contributing
+```
+ruby ./lib/shiftcare.rb search <VALUE>
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/shiftcare. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/shiftcare/blob/main/CODE_OF_CONDUCT.md).
+#### example
 
-## License
+```
+$ ruby ./lib/shiftcare.rb search john
+{"id" => 1, "full_name" => "John Doe", "email" => "john.doe@gmail.com"}
+{"id" => 3, "full_name" => "Alex Johnson", "email" => "alex.johnson@hotmail.com"}
+```
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
-## Code of Conduct
+### Find Email collisions
 
-Everyone interacting in the Shiftcare project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/shiftcare/blob/main/CODE_OF_CONDUCT.md).
+To find all uses who have the same email as at least one other user, use the `email_collisions` command.
+
+```
+ruby ./lib/shiftcare.rb email_collisions
+```
+
+#### example
+
+```
+$ ruby ./lib/shiftcare.rb email_collisions
+{"id" => 2, "full_name" => "Jane Smith", "email" => "jane.smith@yahoo.com"}
+{"id" => 15, "full_name" => "Another Jane Smith", "email" => "jane.smith@yahoo.com"}
+```
+
+### Unit tests
+
+To run the unit tests simply run `rspec`
+
+```
+rspec
+```
+
+
+## Assumptions
+
+- That the json data store will be stored on the local machine and won't need to be changed often.
+- That matching should be done ignoring case. ie: `john` and `JoHn` should match.
+- That the data is un-ordered. When searching through un-oredered data you can't do much better than O(n) so I didn't spend much time trying to optimise the search methods.
+- That missing data should be handled gracefully and not throw an error, ie: if a record is missing a `full_name` value, just treat is as an empty string and keep moving.
+
+## Limitations
+
+- json file size: The data is naively loaded into memory using `File.read` which will cause slow down if the json file grows too large. However it is adequate for the provided json file.
+- Cannot handle nested data. While the keys for `full_name` and `email` can be updated in the config file, it can't handle anything other than top level reads.
+
+
+## Project Structure
+
+
+- `/lib/`
+  - `/cli/`
+    - `runner.rb`
+      - The CLI runner, this is what handles cli arguments and calls.
+  - `/datastores/`
+    - The collection of datastores. Currently only `JsonStore` is available but if more are to be added in the future, this is where they'd go.
+    - `core.rb`
+      - Core functions for datastores. This is where the factory method lives.
+    - `base_store.rb`
+      - The abstract base class for all data stores
+    - `json_store.rb`
+      - a datastore that uses a json file for is data.
+  - `shiftcare.rb`
+    - Cli entry point. Run this file to run the cli.
+- `/config/`
+  - `cli.yml`
+    - Config for the cli

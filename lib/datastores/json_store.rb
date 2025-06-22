@@ -54,9 +54,6 @@ module Shiftcare
       # @param key [String] The field name to check for value collisions.
       #
       # @return [Array<Hash>] An array of all entries involved in collisions (groups with >1 entry)
-      #
-      # @note
-      #   - Normalization: Uses {#normalize} to trim whitespace and ignore case during comparison.
       def find_collisions(key)
         raise SearchValueError, "JsonStore: Invalid key provided => #{key}" unless key.is_a? String
 

@@ -84,6 +84,10 @@ rspec
 - json file size: The data is naively loaded into memory using `File.read` which will cause slow down if the json file grows too large. However it is adequate for the provided json file.
 - Cannot handle nested data. While the keys for `full_name` and `email` can be updated in the config file, it can't handle anything other than top level reads.
 
+## Future Enhancements
+
+- Replace the json store with something more scalable (SQL database probably)
+- Allow for more complex queries, not just top level data. ie: `record.something.another_thing[*].name`
 
 ## Project Structure
 

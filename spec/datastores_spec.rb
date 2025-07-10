@@ -119,7 +119,7 @@ RSpec.describe Shiftcare::DataStores::JsonStore do
 
   describe "#find_collisions" do
     let!(:profiles_with_email_a) do
-      # mised casing to test normalization
+      # mixed casing to test normalization
       [
         mock_profile({ "email" => "a_email@collision.com" }),
         mock_profile({ "email" => "A_EMail@Collision.Com" })

@@ -76,7 +76,7 @@ rspec
 
 - That the json data store will be stored on the local machine and won't need to be changed often.
 - That matching should be done ignoring case. ie: `john` and `JoHn` should match.
-- That the data is un-ordered. When searching through un-oredered data you can't do much better than O(n) so I didn't spend much time trying to optimise the search methods.
+- That the data is un-ordered. When searching through un-ordered data you can't do much better than O(n) so I didn't spend much time trying to optimise the search methods.
 - That missing data should be handled gracefully and not throw an error, ie: if a record is missing a `full_name` value, just treat is as an empty string and keep moving.
 
 ## Limitations
